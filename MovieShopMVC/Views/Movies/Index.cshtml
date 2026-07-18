@@ -1,0 +1,13 @@
+@model IEnumerable<MovieShopMVC.Models.Movie>
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<div class="poster-grid">
+    @foreach (var movie in Model)
+    {
+        <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" title="@movie.Title">
+            <img src="@movie.PosterUrl" alt="@movie.Title poster" />
+        </a>
+    }
+</div>
