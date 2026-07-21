@@ -6,6 +6,7 @@ using MovieShopMVC.Models;
 namespace MovieShopMVC.Services;
 
 public class TmdbMovieService(HttpClient httpClient, IConfiguration configuration, ILogger<TmdbMovieService> logger)
+    : IMovieService
 {
     private const string ImageBase = "https://image.tmdb.org/t/p/";
     private readonly string? _bearerToken = configuration["Tmdb:BearerToken"];

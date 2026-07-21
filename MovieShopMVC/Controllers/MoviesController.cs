@@ -4,7 +4,7 @@ using MovieShopMVC.Services;
 
 namespace MovieShopMVC.Controllers;
 
-public class MoviesController(TmdbMovieService tmdb) : Controller
+public class MoviesController(IMovieService tmdb) : Controller
 {
     private static readonly List<Purchase> Purchases = [];
     private static readonly Dictionary<int, List<Review>> Reviews = [];

@@ -8,12 +8,13 @@ builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.Cookies.C
         options.LoginPath = "/Account/Login";
         options.ExpireTimeSpan = TimeSpan.FromDays(14);
     });
-builder.Services.AddHttpClient<MovieShopMVC.Services.TmdbMovieService>(client =>
+builder.Services.AddHttpClient<MovieShopMVC.Services.IMovieService, MovieShopMVC.Services.TmdbMovieService>(client =>
 {
     client.BaseAddress = new Uri("https://api.themoviedb.org/3/");
     client.Timeout = TimeSpan.FromSeconds(10);
     client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
 });
+builder.Services.AddScoped<MovieShopMVC.Services.IMovieRankingService, MovieShopMVC.Services.MovieRankingService>();
 
 var app = builder.Build();
 
