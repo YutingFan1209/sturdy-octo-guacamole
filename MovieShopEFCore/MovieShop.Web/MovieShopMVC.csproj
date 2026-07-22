@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>2b16f0b8-5ff2-4d92-99bc-ac733f132ace</UserSecretsId>  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MovieShopMVC.Tests/**/*.cs" />
+  </ItemGroup>
+
+</Project>
