@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/MovieShop.Web/">
+    <Project Path="MovieShop.Web/MovieShopMVC.csproj" />
+  </Folder>
+  <Project Path="MovieShop.Api/MovieShop.Api.csproj" />
+</Solution>

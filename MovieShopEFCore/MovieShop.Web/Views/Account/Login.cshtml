@@ -1,0 +1,18 @@
+@model MovieShopMVC.Models.LoginViewModel
+@{ ViewData["Title"] = "Login"; }
+
+<div class="account-page">
+    <h1>Login</h1>
+    <h2>LoginModel</h2>
+    <hr />
+    <form asp-action="Login" asp-route-returnUrl="@ViewBag.ReturnUrl" method="post" class="account-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <label asp-for="Email"></label><input asp-for="Email" class="form-control" /><span asp-validation-for="Email" class="text-danger"></span>
+        <label asp-for="Password"></label><input asp-for="Password" class="form-control" /><span asp-validation-for="Password" class="text-danger"></span>
+        <div class="form-check mt-2"><input asp-for="RememberMe" class="form-check-input" /><label asp-for="RememberMe" class="form-check-label"></label></div>
+        <button class="btn btn-primary mt-2">Login</button>
+        <a asp-action="Register" class="d-block mt-3">Create a new account</a>
+    </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

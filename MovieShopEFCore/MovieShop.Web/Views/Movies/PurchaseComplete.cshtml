@@ -1,0 +1,17 @@
+@model MovieShopMVC.Models.Purchase
+@{
+    ViewData["Title"] = "Purchase complete";
+}
+
+<div class="content-card purchase-complete mx-auto text-center">
+    <div class="success-mark">✓</div>
+    <p class="eyebrow">Order confirmed</p>
+    <h1 class="h2">Enjoy @Model.MovieTitle!</h1>
+    <p class="text-secondary">A receipt will be sent to <strong>@Model.Email</strong>.</p>
+    <dl class="row text-start mt-4">
+        <dt class="col-5">Amount</dt><dd class="col-7">$@Model.Price.ToString("0.00")</dd>
+        <dt class="col-5">Confirmation</dt><dd class="col-7 text-break">@Model.ConfirmationNumber</dd>
+        <dt class="col-5">Purchased</dt><dd class="col-7">@Model.PurchasedAt.ToString("g")</dd>
+    </dl>
+    <a asp-action="Index" class="btn btn-dark mt-3">Continue browsing</a>
+</div>
