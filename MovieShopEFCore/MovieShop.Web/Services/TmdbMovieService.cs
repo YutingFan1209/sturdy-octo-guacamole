@@ -28,6 +28,36 @@ public class TmdbMovieService(HttpClient httpClient, IConfiguration configuratio
         return dto is null ? null : ToMovie(dto);
     }
 
+    public async Task<PagedResult<Movie>> GetTop30HighestGrossingAsync(
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        IReadOnlyList<Movie> movies = await GetPopularMoviesAsync(cancellationToken);
+
+        List<Movie> topMovies = movies
+            .OrderByDescending(movie => movie.Revenue)
+            .Take(30)
+            .ToList();
+
+        pageNumber = Math.Max(pageNumber, 1);
+        pageSize = Math.Clamp(pageSize, 1, 30);
+
+        return new PagedResult<Movie>
+        {
+            Items = topMovies
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList(),
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalCount = topMovies.Count,
+            TotalPages = (int)Math.Ceiling(topMovies.Count / (double)pageSize),
+            HasPreviousPage = pageNumber > 1,
+            HasNextPage = pageNumber * pageSize < topMovies.Count
+        };
+    }
+
     private async Task<T?> GetAsync<T>(string relativeUrl, CancellationToken cancellationToken)
     {
         if (!IsConfigured)

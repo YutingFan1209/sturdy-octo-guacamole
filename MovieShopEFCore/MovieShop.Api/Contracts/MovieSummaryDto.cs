@@ -5,4 +5,5 @@ public record MovieSummaryDto(
     string Title,
     DateTime ReleaseDate,
     decimal Price,
-    string PosterUrl);
+    string PosterUrl,
+    decimal Revenue);

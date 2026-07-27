@@ -25,16 +25,19 @@ public class MoviesController(
                 movie.Title,
                 movie.ReleaseDate ?? DateTime.MinValue,
                 movie.Price ?? 9.90m,
-                movie.PosterUrl ?? "https://placehold.co/500x750?text=No+Poster"))
+                movie.PosterUrl ?? "https://placehold.co/500x750?text=No+Poster",
+                movie.Revenue ?? 0))
             .ToListAsync();
 
         return Ok(movies);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<MovieDetailsDto>> GetMovie(int id)
+    public async Task<ActionResult<MovieDetailsDto>> GetMovie(
+        int id,
+        CancellationToken cancellationToken)
     {
-        var movie = await movieRepository.GetById(id);
+        var movie = await movieRepository.GetById(id, cancellationToken);
 
         if (movie is null)
         {
@@ -42,6 +45,20 @@ public class MoviesController(
         }
 
         return Ok(movie);
+    }
+
+    [HttpGet("top-grossing")]
+    public async Task<ActionResult<PagedResultDto<MovieSummaryDto>>> GetTop30HighestGrossing(
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var movies = await movieRepository.GetTop30HighestGrossingAsync(
+            pageNumber,
+            pageSize,
+            cancellationToken);
+
+        return Ok(movies);
     }
 
     [HttpPost]
@@ -66,7 +83,8 @@ public class MoviesController(
             movie.Title,
             movie.ReleaseDate ?? DateTime.MinValue,
             movie.Price ?? 9.90m,
-            movie.PosterUrl ?? "https://placehold.co/500x750?text=No+Poster");
+            movie.PosterUrl ?? "https://placehold.co/500x750?text=No+Poster",
+            movie.Revenue ?? 0);
 
         return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, response);
     }

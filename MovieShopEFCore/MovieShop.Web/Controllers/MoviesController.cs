@@ -4,7 +4,9 @@ using MovieShopMVC.Services;
 
 namespace MovieShopMVC.Controllers;
 
-public class MoviesController(IMovieService tmdb) : Controller
+public class MoviesController(
+    IMovieService tmdb,
+    IMovieRankingService movieRankingService) : Controller
 {
     private static readonly List<Purchase> Purchases = [];
     private static readonly Dictionary<int, List<Review>> Reviews = [];
@@ -70,6 +72,20 @@ public class MoviesController(IMovieService tmdb) : Controller
             movie.Reviews = reviews;
         }
         return movie is null ? NotFound() : View(movie);
+    }
+
+    public async Task<IActionResult> TopGrossing(
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        PagedResult<Movie> movies =
+            await movieRankingService.GetTop30HighestGrossingAsync(
+                pageNumber,
+                pageSize,
+                cancellationToken);
+
+        return View(movies);
     }
 
     [HttpPost]

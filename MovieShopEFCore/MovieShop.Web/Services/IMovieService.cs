@@ -12,4 +12,9 @@ public interface IMovieService
     Task<Movie?> GetMovieAsync(
         int id,
         CancellationToken cancellationToken = default);
+
+    Task<PagedResult<Movie>> GetTop30HighestGrossingAsync(
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);
 }

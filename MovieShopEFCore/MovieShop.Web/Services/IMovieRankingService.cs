@@ -4,6 +4,8 @@ namespace MovieShopMVC.Services;
 
 public interface IMovieRankingService
 {
-    IReadOnlyList<Movie> GetTop30HighestGrossing(
-        IEnumerable<Movie> movies);
+    Task<PagedResult<Movie>> GetTop30HighestGrossingAsync(
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);
 }
