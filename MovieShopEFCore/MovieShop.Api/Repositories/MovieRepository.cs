@@ -6,7 +6,9 @@ namespace MovieShop.Api.Repositories;
 
 public class MovieRepository(MovieShopDbContext dbContext) : IMovieRepository
 {
-    public async Task<MovieDetailsDto?> GetById(int id)
+    public async Task<MovieDetailsDto?> GetById(
+        int id,
+        CancellationToken cancellationToken = default)
     {
         var movie = await dbContext.Movies
             .AsNoTracking()
@@ -17,7 +19,9 @@ public class MovieRepository(MovieShopDbContext dbContext) : IMovieRepository
                 .ThenInclude(movieCast => movieCast.CastMember)
             .Include(movie => movie.Trailers)
             .Include(movie => movie.Reviews)
-            .SingleOrDefaultAsync(movie => movie.Id == id);
+            .SingleOrDefaultAsync(
+                movie => movie.Id == id,
+                cancellationToken);
 
         if (movie is null)
         {
@@ -55,5 +59,45 @@ public class MovieRepository(MovieShopDbContext dbContext) : IMovieRepository
             movie.Trailers.Select(trailer => new MovieTrailerDto(
                 trailer.Name,
                 trailer.TrailerUrl)).ToList());
+    }
+
+    public async Task<PagedResultDto<MovieSummaryDto>> GetTop30HighestGrossingAsync(
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        pageNumber = Math.Max(pageNumber, 1);
+        pageSize = Math.Clamp(pageSize, 1, 30);
+
+        IQueryable<Models.Movie> movies = dbContext.Movies
+            .AsNoTracking()
+            .Where(movie => movie.Revenue.HasValue);
+
+        int databaseCount = await movies.CountAsync(cancellationToken);
+        int totalCount = Math.Min(databaseCount, 30);
+        int skip = (pageNumber - 1) * pageSize;
+        int take = Math.Min(pageSize, Math.Max(totalCount - skip, 0));
+
+        IReadOnlyList<MovieSummaryDto> items = take == 0
+            ? []
+            : await movies
+            .OrderByDescending(movie => movie.Revenue)
+            .ThenBy(movie => movie.Id)
+            .Skip(skip)
+            .Take(take)
+            .Select(movie => new MovieSummaryDto(
+                movie.Id,
+                movie.Title,
+                movie.ReleaseDate ?? DateTime.MinValue,
+                movie.Price ?? 9.90m,
+                movie.PosterUrl ?? "https://placehold.co/500x750?text=No+Poster",
+                movie.Revenue ?? 0))
+            .ToListAsync(cancellationToken);
+
+        return new PagedResultDto<MovieSummaryDto>(
+            items,
+            pageNumber,
+            pageSize,
+            totalCount);
     }
 }

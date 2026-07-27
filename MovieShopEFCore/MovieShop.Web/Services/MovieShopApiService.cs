@@ -27,4 +27,14 @@ public class MovieShopApiService(HttpClient httpClient) : IMovieService
             : await response.EnsureSuccessStatusCode()
                 .Content.ReadFromJsonAsync<Movie>(cancellationToken);
     }
+
+    public async Task<PagedResult<Movie>> GetTop30HighestGrossingAsync(
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        return await httpClient.GetFromJsonAsync<PagedResult<Movie>>(
+            $"api/movies/top-grossing?pageNumber={pageNumber}&pageSize={pageSize}",
+            cancellationToken) ?? new PagedResult<Movie>();
+    }
 }

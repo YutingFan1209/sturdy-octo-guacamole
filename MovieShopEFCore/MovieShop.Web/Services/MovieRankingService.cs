@@ -2,16 +2,16 @@ using MovieShopMVC.Models;
 
 namespace MovieShopMVC.Services;
 
-public class MovieRankingService : IMovieRankingService
+public class MovieRankingService(IMovieService movieService) : IMovieRankingService
 {
-    public IReadOnlyList<Movie> GetTop30HighestGrossing(
-        IEnumerable<Movie> movies)
+    public async Task<PagedResult<Movie>> GetTop30HighestGrossingAsync(
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(movies);
-
-        return movies
-            .OrderByDescending(movie => movie.Revenue)
-            .Take(30)
-            .ToList();
+        return await movieService.GetTop30HighestGrossingAsync(
+            pageNumber,
+            pageSize,
+            cancellationToken);
     }
 }
