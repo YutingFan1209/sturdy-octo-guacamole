@@ -34,7 +34,8 @@
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <div class="d-flex align-items-center gap-2">
-                            <span class="text-muted">Hello, @User.Identity.Name</span>
+                            <a asp-controller="Account" asp-action="Profile"
+                               class="text-decoration-none">Hello, @User.Identity.Name</a>
                             <form asp-controller="Account" asp-action="Logout" method="post"><button class="btn btn-outline-primary btn-sm">Logout</button></form>
                         </div>
                     }

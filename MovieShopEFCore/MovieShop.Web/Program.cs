@@ -5,8 +5,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
+        options.Cookie.Name = "MovieShopAuthCookie";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/Login";
         options.ExpireTimeSpan = TimeSpan.FromDays(14);
+        options.SlidingExpiration = true;
     });
 builder.Services.AddHttpClient<MovieShopMVC.Services.IMovieService, MovieShopMVC.Services.MovieShopApiService>(client =>
 {
@@ -17,6 +23,14 @@ builder.Services.AddHttpClient<MovieShopMVC.Services.IMovieService, MovieShopMVC
     client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
 });
 builder.Services.AddScoped<MovieShopMVC.Services.IMovieRankingService, MovieShopMVC.Services.MovieRankingService>();
+builder.Services.AddHttpClient<MovieShopMVC.Services.IAccountService, MovieShopMVC.Services.AccountApiService>(client =>
+{
+    client.BaseAddress = new Uri(
+        builder.Configuration["MovieShopApi:BaseUrl"]
+        ?? "http://127.0.0.1:5080/");
+    client.Timeout = TimeSpan.FromSeconds(10);
+    client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+});
 
 var app = builder.Build();
 

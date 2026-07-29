@@ -1,0 +1,20 @@
+@model MovieShopMVC.Models.UserInfo
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h1>My Profile</h1>
+
+<dl class="row mt-4">
+    <dt class="col-sm-3">User ID</dt>
+    <dd class="col-sm-9">@Model.Id</dd>
+
+    <dt class="col-sm-3">First Name</dt>
+    <dd class="col-sm-9">@Model.FirstName</dd>
+
+    <dt class="col-sm-3">Last Name</dt>
+    <dd class="col-sm-9">@Model.LastName</dd>
+
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.Email</dd>
+</dl>
