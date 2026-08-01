@@ -32,6 +32,34 @@ public class MoviesController(
         return Ok(movies);
     }
 
+    [HttpGet("upcoming")]
+    public async Task<ActionResult<IReadOnlyList<MovieSummaryDto>>> GetUpcomingMovies(
+        CancellationToken cancellationToken)
+    {
+        var today = DateTime.UtcNow.Date;
+        var movies = await dbContext.Movies
+            .AsNoTracking()
+            .Where(movie => movie.ReleaseDate >= today)
+            .OrderBy(movie => movie.ReleaseDate)
+            .ThenBy(movie => movie.Title)
+            .Take(30)
+            .Select(movie => new MovieSummaryDto(
+                movie.Id,
+                movie.Title,
+                movie.ReleaseDate ?? DateTime.MinValue,
+                movie.Price ?? 9.90m,
+                movie.PosterUrl ?? "https://placehold.co/500x750?text=No+Poster",
+                movie.Revenue ?? 0))
+            .ToListAsync(cancellationToken);
+
+        if (movies.Count == 0)
+        {
+            return NotFound(new { message = "No upcoming movies found." });
+        }
+
+        return Ok(movies);
+    }
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<MovieDetailsDto>> GetMovie(
         int id,
