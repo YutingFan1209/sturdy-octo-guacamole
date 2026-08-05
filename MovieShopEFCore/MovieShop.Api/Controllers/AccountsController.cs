@@ -6,7 +6,9 @@ namespace MovieShop.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AccountsController(IAccountService accountService) : ControllerBase
+public class AccountsController(
+    IAccountService accountService,
+    IJwtTokenService jwtTokenService) : ControllerBase
 {
     [HttpPost("register")]
     public async Task<ActionResult<UserInfoDto>> Register(
@@ -26,7 +28,7 @@ public class AccountsController(IAccountService accountService) : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<UserInfoDto>> Login(
+    public async Task<ActionResult<LoginResponseDto>> Login(
         LoginRequest request,
         CancellationToken cancellationToken)
     {
@@ -35,8 +37,20 @@ public class AccountsController(IAccountService accountService) : ControllerBase
             request.Password,
             cancellationToken);
 
-        return user is null
-            ? Unauthorized(new { message = "Invalid email or password." })
-            : Ok(user);
+        if (user is null)
+        {
+            return Unauthorized(new { message = "Invalid email or password." });
+        }
+
+        JwtTokenResult jwt = jwtTokenService.CreateToken(user);
+
+        return Ok(new LoginResponseDto(
+            user.Id,
+            user.Email,
+            user.FirstName,
+            user.LastName,
+            user.DateOfBirth,
+            jwt.Token,
+            jwt.ExpiresAtUtc));
     }
 }
