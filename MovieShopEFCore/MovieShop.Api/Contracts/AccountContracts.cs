@@ -35,3 +35,12 @@ public record UserInfoDto(
     string FirstName,
     string LastName,
     DateOnly? DateOfBirth);
+
+public record LoginResponseDto(
+    int Id,
+    string Email,
+    string FirstName,
+    string LastName,
+    DateOnly? DateOfBirth,
+    string Token,
+    DateTime ExpiresAtUtc);
