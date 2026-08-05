@@ -1,0 +1,37 @@
+<section class="page">
+  <p class="eyebrow">Top 30</p>
+  <h1>Highest-grossing movies.</h1>
+  <p class="intro">Our biggest box-office hits, loaded one page at a time from the MovieShop API.</p>
+
+  @if (page$ | async; as page) {
+    @if (page.items.length) {
+      <div class="movie-grid">
+        @for (movie of page.items; track movie.id; let rank = $index) {
+          <a class="movie-card" [routerLink]="['/movies', movie.id]">
+            <span class="rank">#{{ (page.pageNumber - 1) * page.pageSize + rank + 1 }}</span>
+            <img [src]="movie.posterUrl" [alt]="movie.title + ' poster'" loading="lazy">
+            <div class="movie-copy">
+              <h2>{{ movie.title }}</h2>
+              <div><span>{{ movie.releaseDate | date:'yyyy' }}</span><strong>{{ movie.price | currency }}</strong></div>
+            </div>
+          </a>
+        }
+      </div>
+
+      <nav class="pagination" aria-label="Movie pages">
+        <a [class.disabled]="!page.hasPreviousPage" [routerLink]="[]" [queryParams]="{ page: page.pageNumber - 1 }">← Previous</a>
+        <div>
+          @for (number of pageNumbers(page.totalPages); track number) {
+            <a [class.current]="number === page.pageNumber" [routerLink]="[]" [queryParams]="{ page: number }">{{ number }}</a>
+          }
+        </div>
+        <a [class.disabled]="!page.hasNextPage" [routerLink]="[]" [queryParams]="{ page: page.pageNumber + 1 }">Next →</a>
+      </nav>
+      <p class="summary">Page {{ page.pageNumber }} of {{ page.totalPages }} · {{ page.totalCount }} movies</p>
+    } @else { <p class="status">No movies found on this page.</p> }
+  } @else if (error) {
+    <p class="status error">Could not reach the MovieShop API. Start it on port 5080, then refresh.</p>
+  } @else {
+    <p class="status">Loading movies…</p>
+  }
+</section>
