@@ -1,0 +1,4 @@
+.site-header { height: 64px; padding: 0 clamp(1rem, 4vw, 4rem); display: flex; align-items: center; justify-content: space-between; background: #11131a; border-bottom: 1px solid #282b35; position: sticky; top: 0; z-index: 10; }
+.brand { color: #ffca3a; font-size: 1.35rem; font-weight: 800; text-decoration: none; }
+nav a { color: #aeb3c2; text-decoration: none; }
+nav a.active, nav a:hover { color: white; }

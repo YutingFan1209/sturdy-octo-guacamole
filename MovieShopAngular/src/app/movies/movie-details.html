@@ -1,0 +1,21 @@
+@if (movie$ | async; as movie) {
+  <article class="hero" [style.background-image]="'linear-gradient(90deg, rgba(11,13,18,.98), rgba(11,13,18,.72)), url(' + movie.backdropUrl + ')'">
+    <div class="page details">
+      <img class="poster" [src]="movie.posterUrl" [alt]="movie.title + ' poster'">
+      <div>
+        <a class="back" routerLink="/">← All movies</a>
+        <p class="eyebrow">{{ movie.genre }}</p>
+        <h1>{{ movie.title }}</h1>
+        <p class="tagline">{{ movie.tagline }}</p>
+        <div class="facts"><strong>★ {{ movie.rating | number:'1.1-1' }}</strong><span>{{ movie.releaseDate | date:'yyyy' }}</span><span>{{ movie.runtime }} min</span></div>
+        <p class="overview">{{ movie.overview }}</p>
+      </div>
+    </div>
+  </article>
+  <section class="page columns">
+    <div><h2>Cast</h2><div class="people">@for (cast of movie.casts; track cast.name) { <div><b>{{ cast.name }}</b><span>{{ cast.character }}</span></div> }</div></div>
+    <div><h2>Trailers</h2><div class="trailers">@for (trailer of movie.trailers; track trailer.url) { <a [href]="trailer.url" target="_blank" rel="noopener">▶ {{ trailer.name }}</a> } @empty { <p>No trailers available.</p> }</div></div>
+  </section>
+} @else if (error) {
+  <div class="page status error">Movie not found or the API is unavailable. <a routerLink="/">Return home</a></div>
+} @else { <p class="status">Loading movie…</p> }
