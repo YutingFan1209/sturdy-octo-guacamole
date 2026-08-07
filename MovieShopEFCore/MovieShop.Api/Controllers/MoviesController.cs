@@ -4,6 +4,7 @@ using MovieShop.Api.Contracts;
 using MovieShop.Api.Data;
 using MovieShop.Api.Models;
 using MovieShop.Api.Repositories;
+using MovieShop.Api.Services;
 
 namespace MovieShop.Api.Controllers;
 
@@ -11,7 +12,7 @@ namespace MovieShop.Api.Controllers;
 [Route("api/[controller]")]
 public class MoviesController(
     MovieShopDbContext dbContext,
-    IMovieRepository movieRepository) : ControllerBase
+    IMovieService movieService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<MovieSummaryDto>>> GetMovies()
@@ -65,7 +66,7 @@ public class MoviesController(
         int id,
         CancellationToken cancellationToken)
     {
-        var movie = await movieRepository.GetById(id, cancellationToken);
+        var movie = await movieService.GetMovieDetailsAsync(id, cancellationToken);
 
         if (movie is null)
         {
@@ -81,7 +82,7 @@ public class MoviesController(
         int pageSize = 10,
         CancellationToken cancellationToken = default)
     {
-        var movies = await movieRepository.GetTop30HighestGrossingAsync(
+        var movies = await movieService.GetTop30HighestGrossingAsync(
             pageNumber,
             pageSize,
             cancellationToken);
