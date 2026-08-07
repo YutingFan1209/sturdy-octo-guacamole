@@ -1,4 +1,9 @@
 .site-header { height: 64px; padding: 0 clamp(1rem, 4vw, 4rem); display: flex; align-items: center; justify-content: space-between; background: #11131a; border-bottom: 1px solid #282b35; position: sticky; top: 0; z-index: 10; }
 .brand { color: #ffca3a; font-size: 1.35rem; font-weight: 800; text-decoration: none; }
+nav { display: flex; align-items: center; gap: 1rem; }
 nav a { color: #aeb3c2; text-decoration: none; }
 nav a.active, nav a:hover { color: white; }
+nav span { color: #aeb3c2; }
+nav button, .register-link { border: 1px solid #ffca3a; border-radius: 8px; padding: .45rem .75rem; background: transparent; color: #ffca3a; cursor: pointer; }
+nav button:hover, nav .register-link:hover { background: #ffca3a; color: #0b0d12; }
+@media (max-width: 620px) { nav span { display: none; } .site-header { padding: 0 1rem; } nav { gap: .65rem; } }
