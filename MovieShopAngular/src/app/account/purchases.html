@@ -1,0 +1,11 @@
+<section class="page">
+  <p class="eyebrow">Your account</p><h1>Purchase history</h1>
+  @if (purchases$ | async; as purchases) {
+    @if (purchases.length) {
+      <div class="purchase-list">@for (purchase of purchases; track purchase.id) {
+        <a [routerLink]="['/movies', purchase.movieId]"><div><strong>{{ purchase.movieTitle }}</strong><span>{{ purchase.purchaseNumber }} · {{ purchase.purchaseDateTime | date:'mediumDate' }}</span></div><b>{{ purchase.totalPrice | currency }}</b></a>
+      }</div>
+    } @else if (error) { <p class="status error">Could not load purchases. Your login may have expired.</p> }
+    @else { <p class="status">You have not purchased any movies yet.</p> }
+  } @else { <p class="status">Loading purchases…</p> }
+</section>
