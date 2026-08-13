@@ -40,8 +40,13 @@ builder.Services.AddSwaggerGen(options =>
         [new OpenApiSecuritySchemeReference("bearer", document)] = []
     });
 });
+var sqlConnectionString =
+    builder.Configuration["AZURE_SQL_CONNECTIONSTRING"]
+    ?? builder.Configuration.GetConnectionString("MovieShop")
+    ?? throw new InvalidOperationException("SQL connection string is missing.");
+
 builder.Services.AddDbContext<MovieShopDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MovieShop")));
+    options.UseSqlServer(sqlConnectionString));
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
