@@ -37,4 +37,39 @@ public class MovieShopApiService(HttpClient httpClient) : IMovieService
             $"api/movies/top-grossing?pageNumber={pageNumber}&pageSize={pageSize}",
             cancellationToken) ?? new PagedResult<Movie>();
     }
+
+    public async Task SaveReviewAsync(
+        Review review,
+        CancellationToken cancellationToken = default)
+    {
+        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(
+            $"api/movies/{review.MovieId}/reviews",
+            new { review.Rating, review.Comment },
+            cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<Purchase> PurchaseMovieAsync(
+        int movieId,
+        CancellationToken cancellationToken = default)
+    {
+        using HttpResponseMessage response = await httpClient.PostAsync(
+            $"api/movies/{movieId}/purchase",
+            null,
+            cancellationToken);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<Purchase>(cancellationToken)
+            ?? throw new InvalidOperationException("The API returned an empty purchase response.");
+    }
+
+    public async Task AddFavoriteAsync(
+        int movieId,
+        CancellationToken cancellationToken = default)
+    {
+        using HttpResponseMessage response = await httpClient.PostAsync(
+            $"api/movies/{movieId}/favorite",
+            null,
+            cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 }

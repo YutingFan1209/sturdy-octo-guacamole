@@ -11,4 +11,10 @@ public interface IAccountService
     Task<UserInfo?> ValidateUserAsync(
         LoginViewModel model,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Purchase>> GetPurchasesAsync(
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Favorite>> GetFavoritesAsync(
+        CancellationToken cancellationToken = default);
 }

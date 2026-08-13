@@ -27,8 +27,21 @@
             <p class="overview">@Model.Overview</p>
         </div>
         <div class="hero-actions">
-            <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal">✎ Review</button>
-            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#buyModal">BUY $@Model.Price.ToString("0.00")</button>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal">✎ Review</button>
+                <form asp-action="AddFavorite" method="post" class="d-inline">
+                    <input type="hidden" name="movieId" value="@Model.Id" />
+                    <button class="btn btn-outline-light">♡ Favorite</button>
+                </form>
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#buyModal">BUY $@Model.Price.ToString("0.00")</button>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login"
+                   asp-route-returnUrl="@Context.Request.Path"
+                   class="btn btn-light">Log in to review or buy</a>
+            }
         </div>
     </div>
 </section>
@@ -77,11 +90,11 @@
 
 <div class="modal fade" id="buyModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Buy @Model.Title</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-        <form asp-action="Buy" method="post"><div class="modal-body"><input type="hidden" name="movieId" value="@Model.Id" /><label class="form-label">Email</label><input name="email" type="email" required class="form-control" /></div><div class="modal-footer"><button class="btn btn-primary">Pay $@Model.Price.ToString("0.00")</button></div></form>
+        <form asp-action="Buy" method="post"><div class="modal-body"><input type="hidden" name="movieId" value="@Model.Id" /><p>Confirm your purchase of <strong>@Model.Title</strong> for $@Model.Price.ToString("0.00").</p></div><div class="modal-footer"><button class="btn btn-primary">Confirm purchase</button></div></form>
     </div></div>
 </div>
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Review @Model.Title</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-        <form asp-action="AddReview" method="post"><div class="modal-body row g-3"><input type="hidden" name="MovieId" value="@Model.Id" /><div class="col-8"><label class="form-label">Name</label><input name="Name" required class="form-control" /></div><div class="col-4"><label class="form-label">Rating</label><input name="Rating" type="number" min="1" max="10" value="8" required class="form-control" /></div><div class="col-12"><label class="form-label">Comment</label><textarea name="Comment" required class="form-control"></textarea></div></div><div class="modal-footer"><button class="btn btn-primary">Post Review</button></div></form>
+        <form asp-action="AddReview" method="post"><div class="modal-body row g-3"><input type="hidden" name="MovieId" value="@Model.Id" /><div class="col-4"><label class="form-label">Rating</label><input name="Rating" type="number" min="1" max="10" step="0.1" value="8" required class="form-control" /></div><div class="col-12"><label class="form-label">Comment</label><textarea name="Comment" required maxlength="500" class="form-control"></textarea></div></div><div class="modal-footer"><button class="btn btn-primary">Save Review</button></div></form>
     </div></div>
 </div>

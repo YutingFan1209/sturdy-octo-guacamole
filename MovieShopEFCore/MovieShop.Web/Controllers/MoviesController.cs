@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieShopMVC.Models;
 using MovieShopMVC.Services;
 
@@ -8,8 +9,6 @@ public class MoviesController(
     IMovieService tmdb,
     IMovieRankingService movieRankingService) : Controller
 {
-    private static readonly List<Purchase> Purchases = [];
-    private static readonly Dictionary<int, List<Review>> Reviews = [];
     private static readonly List<Movie> Movies =
     [
         CreateMovie(1, "Avengers: Age of Ultron", "Action", 8.9,
@@ -67,10 +66,6 @@ public class MoviesController(
     {
         Movie? movie = await tmdb.GetMovieAsync(id, cancellationToken)
             ?? Movies.FirstOrDefault(m => m.Id == id);
-        if (movie is not null && Reviews.TryGetValue(id, out List<Review>? reviews))
-        {
-            movie.Reviews = reviews;
-        }
         return movie is null ? NotFound() : View(movie);
     }
 
@@ -89,8 +84,11 @@ public class MoviesController(
     }
 
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
-    public IActionResult AddReview(Review review)
+    public async Task<IActionResult> AddReview(
+        Review review,
+        CancellationToken cancellationToken)
     {
         if (review.MovieId <= 0)
         {
@@ -103,44 +101,30 @@ public class MoviesController(
             return RedirectToAction(nameof(Details), new { id = review.MovieId });
         }
 
-        review.CreatedAt = DateTime.Now;
-        if (!Reviews.TryGetValue(review.MovieId, out List<Review>? reviews))
-        {
-            reviews = [];
-            Reviews[review.MovieId] = reviews;
-        }
-        reviews.Insert(0, review);
-        TempData["Success"] = "Thanks! Your review has been posted.";
+        await tmdb.SaveReviewAsync(review, cancellationToken);
+        TempData["Success"] = "Thanks! Your review has been saved.";
         return RedirectToAction(nameof(Details), new { id = review.MovieId, anchor = "reviews" });
     }
 
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Buy(int movieId, string email, CancellationToken cancellationToken)
+    public async Task<IActionResult> Buy(int movieId, CancellationToken cancellationToken)
     {
-        Movie? movie = await tmdb.GetMovieAsync(movieId, cancellationToken)
-            ?? Movies.FirstOrDefault(m => m.Id == movieId);
-        if (movie is null)
-        {
-            return NotFound();
-        }
-
-        if (string.IsNullOrWhiteSpace(email) || !new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(email))
-        {
-            TempData["Error"] = "Enter a valid email address to complete the purchase.";
-            return RedirectToAction(nameof(Details), new { id = movieId });
-        }
-
-        var purchase = new Purchase
-        {
-            MovieId = movie.Id,
-            MovieTitle = movie.Title,
-            Price = movie.Price,
-            Email = email.Trim()
-        };
-        Purchases.Add(purchase);
-
+        Purchase purchase = await tmdb.PurchaseMovieAsync(movieId, cancellationToken);
         return View("PurchaseComplete", purchase);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddFavorite(
+        int movieId,
+        CancellationToken cancellationToken)
+    {
+        await tmdb.AddFavoriteAsync(movieId, cancellationToken);
+        TempData["Success"] = "Movie added to your favorites.";
+        return RedirectToAction(nameof(Details), new { id = movieId });
     }
 
     private static Movie CreateMovie(int id, string title, string genre, double rating,

@@ -120,7 +120,8 @@ public sealed class MovieServiceUnitTests
             839_000_000m,
             9.99m,
             [new MovieCastDto("Leonardo DiCaprio", "Cobb", null)],
-            [new MovieTrailerDto("Official Trailer", "https://example.com/trailer")]);
+            [new MovieTrailerDto("Official Trailer", "https://example.com/trailer")],
+            [new MovieReviewDto(3, "Movie Fan", 8.7m, "Excellent")]);
 
         _repositoryMock
             .Setup(repository => repository.GetById(7, It.IsAny<CancellationToken>()))

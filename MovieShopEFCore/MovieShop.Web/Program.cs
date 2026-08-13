@@ -2,6 +2,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<MovieShopMVC.Services.ApiBearerTokenHandler>();
 builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -21,7 +23,7 @@ builder.Services.AddHttpClient<MovieShopMVC.Services.IMovieService, MovieShopMVC
         ?? "http://127.0.0.1:5080/");
     client.Timeout = TimeSpan.FromSeconds(10);
     client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-});
+}).AddHttpMessageHandler<MovieShopMVC.Services.ApiBearerTokenHandler>();
 builder.Services.AddScoped<MovieShopMVC.Services.IMovieRankingService, MovieShopMVC.Services.MovieRankingService>();
 builder.Services.AddHttpClient<MovieShopMVC.Services.IAccountService, MovieShopMVC.Services.AccountApiService>(client =>
 {
@@ -30,7 +32,7 @@ builder.Services.AddHttpClient<MovieShopMVC.Services.IAccountService, MovieShopM
         ?? "http://127.0.0.1:5080/");
     client.Timeout = TimeSpan.FromSeconds(10);
     client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-});
+}).AddHttpMessageHandler<MovieShopMVC.Services.ApiBearerTokenHandler>();
 
 var app = builder.Build();
 

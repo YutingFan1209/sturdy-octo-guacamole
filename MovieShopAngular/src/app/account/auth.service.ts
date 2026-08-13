@@ -3,6 +3,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { AuthSession, LoginRequest, LoginResponse, RegisterRequest, UserInfo } from './auth.models';
+import { apiUrl } from '../api-url';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
   readonly isAuthenticated = computed(() => this.validSession() !== null);
 
   login(request: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/api/accounts/login', request).pipe(
+    return this.http.post<LoginResponse>(apiUrl('/api/accounts/login'), request).pipe(
       tap(response => this.saveSession({
         token: response.token,
         expiresAtUtc: response.expiresAtUtc,
@@ -31,7 +32,7 @@ export class AuthService {
   }
 
   register(request: RegisterRequest): Observable<UserInfo> {
-    return this.http.post<UserInfo>('/api/accounts/register', request);
+    return this.http.post<UserInfo>(apiUrl('/api/accounts/register'), request);
   }
 
   getToken(): string | null {

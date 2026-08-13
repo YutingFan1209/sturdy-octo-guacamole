@@ -16,8 +16,15 @@ public record MovieDetailsDto(
     decimal Revenue,
     decimal Price,
     IReadOnlyList<MovieCastDto> Casts,
-    IReadOnlyList<MovieTrailerDto> Trailers);
+    IReadOnlyList<MovieTrailerDto> Trailers,
+    IReadOnlyList<MovieReviewDto> Reviews);
 
 public record MovieCastDto(string Name, string Character, string? ProfileUrl);
 
 public record MovieTrailerDto(string Name, string Url);
+
+public record MovieReviewDto(
+    int UserId,
+    string Name,
+    decimal Rating,
+    string Comment);
