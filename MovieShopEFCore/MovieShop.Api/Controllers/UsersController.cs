@@ -38,4 +38,28 @@ public class UsersController(MovieShopDbContext dbContext) : ControllerBase
 
         return Ok(purchases);
     }
+
+    [HttpGet("favorites")]
+    public async Task<ActionResult<IReadOnlyList<FavoriteDto>>> GetFavorites(
+        CancellationToken cancellationToken)
+    {
+        string? userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!int.TryParse(userIdClaim, out int userId))
+        {
+            return Unauthorized();
+        }
+
+        var favorites = await dbContext.Favorites
+            .AsNoTracking()
+            .Where(favorite => favorite.UserId == userId)
+            .OrderBy(favorite => favorite.Movie.Title)
+            .Select(favorite => new FavoriteDto(
+                favorite.Id,
+                favorite.MovieId,
+                favorite.Movie.Title,
+                favorite.Movie.PosterUrl ?? ""))
+            .ToListAsync(cancellationToken);
+
+        return Ok(favorites);
+    }
 }

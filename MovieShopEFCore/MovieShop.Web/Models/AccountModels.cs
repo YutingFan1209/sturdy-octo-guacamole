@@ -9,6 +9,15 @@ public class UserInfo
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";
     public DateOnly? DateOfBirth { get; set; }
+    public string Token { get; set; } = "";
+    public DateTime ExpiresAtUtc { get; set; }
+}
+
+public class ProfileViewModel
+{
+    public required UserInfo User { get; init; }
+    public IReadOnlyList<Purchase> Purchases { get; init; } = [];
+    public IReadOnlyList<Favorite> Favorites { get; init; } = [];
 }
 
 public class RegisterViewModel

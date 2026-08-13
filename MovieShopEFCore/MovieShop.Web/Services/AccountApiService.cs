@@ -37,4 +37,20 @@ public class AccountApiService(HttpClient httpClient) : IAccountService
                 .Content.ReadFromJsonAsync<UserInfo>(
                     cancellationToken);
     }
+
+    public async Task<IReadOnlyList<Purchase>> GetPurchasesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await httpClient.GetFromJsonAsync<List<Purchase>>(
+            "api/users/purchases",
+            cancellationToken) ?? [];
+    }
+
+    public async Task<IReadOnlyList<Favorite>> GetFavoritesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await httpClient.GetFromJsonAsync<List<Favorite>>(
+            "api/users/favorites",
+            cancellationToken) ?? [];
+    }
 }

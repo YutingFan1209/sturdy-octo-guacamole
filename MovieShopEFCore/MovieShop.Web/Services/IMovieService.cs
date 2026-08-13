@@ -17,4 +17,16 @@ public interface IMovieService
         int pageNumber = 1,
         int pageSize = 10,
         CancellationToken cancellationToken = default);
+
+    Task SaveReviewAsync(
+        Review review,
+        CancellationToken cancellationToken = default);
+
+    Task<Purchase> PurchaseMovieAsync(
+        int movieId,
+        CancellationToken cancellationToken = default);
+
+    Task AddFavoriteAsync(
+        int movieId,
+        CancellationToken cancellationToken = default);
 }

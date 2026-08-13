@@ -102,7 +102,7 @@ public class MovieShopDbContext(DbContextOptions<MovieShopDbContext> options)
         {
             entity.ToTable("Review");
             entity.HasKey(review => new { review.MovieId, review.UserId });
-            entity.Property(review => review.Rating).HasPrecision(3, 2);
+            entity.Property(review => review.Rating).HasPrecision(4, 2);
 
             entity.HasOne(review => review.Movie)
                 .WithMany(movie => movie.Reviews)
@@ -153,6 +153,8 @@ public class MovieShopDbContext(DbContextOptions<MovieShopDbContext> options)
         modelBuilder.Entity<Favorite>(entity =>
         {
             entity.ToTable("Favorites");
+            entity.HasIndex(favorite => new { favorite.MovieId, favorite.UserId })
+                .IsUnique();
 
             entity.HasOne(favorite => favorite.Movie)
                 .WithMany(movie => movie.Favorites)

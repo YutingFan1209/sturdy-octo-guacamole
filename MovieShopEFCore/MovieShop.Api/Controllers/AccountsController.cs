@@ -11,7 +11,7 @@ public class AccountsController(
     IJwtTokenService jwtTokenService) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<ActionResult<UserInfoDto>> Register(
+    public async Task<ActionResult<LoginResponseDto>> Register(
         RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
@@ -24,7 +24,16 @@ public class AccountsController(
             return Conflict(new { message = "An account with this email already exists." });
         }
 
-        return Ok(user);
+        JwtTokenResult jwt = jwtTokenService.CreateToken(user);
+
+        return Ok(new LoginResponseDto(
+            user.Id,
+            user.Email,
+            user.FirstName,
+            user.LastName,
+            user.DateOfBirth,
+            jwt.Token,
+            jwt.ExpiresAtUtc));
     }
 
     [HttpPost("login")]

@@ -93,15 +93,22 @@ public class AccountController(IAccountService accountService) : Controller
 
     [Authorize]
     [HttpGet]
-    public IActionResult Profile()
+    public async Task<IActionResult> Profile(CancellationToken cancellationToken)
     {
-        var model = new UserInfo
+        var user = new UserInfo
         {
             Id = int.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)!),
             FirstName = User.FindFirstValue(ClaimTypes.GivenName) ?? "",
             LastName = User.FindFirstValue(ClaimTypes.Surname) ?? "",
             Email = User.FindFirstValue(ClaimTypes.Email) ?? ""
+        };
+
+        var model = new ProfileViewModel
+        {
+            User = user,
+            Purchases = await accountService.GetPurchasesAsync(cancellationToken),
+            Favorites = await accountService.GetFavoritesAsync(cancellationToken)
         };
 
         return View(model);
@@ -137,13 +144,27 @@ public class AccountController(IAccountService accountService) : Controller
 
         var principal = new ClaimsPrincipal(identity);
 
+        var properties = new AuthenticationProperties
+        {
+            IsPersistent = persistent,
+            AllowRefresh = true,
+            ExpiresUtc = user.ExpiresAtUtc == default
+                ? DateTimeOffset.UtcNow.AddMinutes(15)
+                : new DateTimeOffset(
+                    DateTime.SpecifyKind(user.ExpiresAtUtc, DateTimeKind.Utc))
+        };
+        properties.StoreTokens(
+        [
+            new AuthenticationToken
+            {
+                Name = "access_token",
+                Value = user.Token
+            }
+        ]);
+
         await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
             principal,
-            new AuthenticationProperties
-            {
-                IsPersistent = persistent,
-                AllowRefresh = true
-            });
+            properties);
     }
 }

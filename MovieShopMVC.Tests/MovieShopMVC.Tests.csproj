@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MovieShopMVC\MovieShopMVC.csproj" />
+    <ProjectReference Include="..\MovieShopEFCore\MovieShop.Web\MovieShopMVC.csproj" />
   </ItemGroup>
 
 </Project>

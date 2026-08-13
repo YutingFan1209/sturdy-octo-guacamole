@@ -19,6 +19,7 @@ public class MovieRepository(MovieShopDbContext dbContext) : IMovieRepository
                 .ThenInclude(movieCast => movieCast.CastMember)
             .Include(movie => movie.Trailers)
             .Include(movie => movie.Reviews)
+                .ThenInclude(review => review.User)
             .SingleOrDefaultAsync(
                 movie => movie.Id == id,
                 cancellationToken);
@@ -58,7 +59,15 @@ public class MovieRepository(MovieShopDbContext dbContext) : IMovieRepository
                 movieCast.CastMember.ProfilePath)).ToList(),
             movie.Trailers.Select(trailer => new MovieTrailerDto(
                 trailer.Name,
-                trailer.TrailerUrl)).ToList());
+                trailer.TrailerUrl)).ToList(),
+            movie.Reviews
+                .OrderByDescending(review => review.Rating)
+                .Select(review => new MovieReviewDto(
+                    review.UserId,
+                    $"{review.User.FirstName} {review.User.LastName}".Trim(),
+                    review.Rating,
+                    review.ReviewText ?? ""))
+                .ToList());
     }
 
     public async Task<PagedResultDto<MovieSummaryDto>> GetTop30HighestGrossingAsync(

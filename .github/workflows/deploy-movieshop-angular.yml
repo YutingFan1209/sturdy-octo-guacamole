@@ -1,0 +1,77 @@
+name: Deploy MovieShop Angular
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'MovieShopAngular/**'
+      - '.github/workflows/deploy-movieshop-angular.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: MovieShopAngular
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: npm
+          cache-dependency-path: MovieShopAngular/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test -- --watch=false
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload immutable Angular artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: movieshop-angular-${{ github.sha }}
+          path: MovieShopAngular/dist/MovieShopAngular/browser
+          if-no-files-found: error
+          retention-days: 14
+
+  deploy-production:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: movieshop-angular-production
+      cancel-in-progress: false
+    steps:
+      - name: Download validated Angular artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: movieshop-angular-${{ github.sha }}
+          path: angular-publish
+
+      - name: Apply production API configuration
+        env:
+          API_BASE_URL: ${{ vars.AZURE_API_BASE_URL }}
+        run: >-
+          node -e "const url = process.env.API_BASE_URL;
+          if (!url) throw new Error('AZURE_API_BASE_URL is not configured');
+          require('fs').writeFileSync('angular-publish/app-config.js',
+          'window.__MOVIESHOP_CONFIG__ = ' + JSON.stringify({ apiBaseUrl: url }) + ';\n')"
+
+      - name: Deploy static site
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: upload
+          app_location: angular-publish
+          output_location: ''
+          skip_app_build: true

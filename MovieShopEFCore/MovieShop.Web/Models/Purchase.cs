@@ -4,13 +4,10 @@ namespace MovieShopMVC.Models;
 
 public class Purchase
 {
-    public Guid ConfirmationNumber { get; set; } = Guid.NewGuid();
+    public int Id { get; set; }
+    public string PurchaseNumber { get; set; } = "";
     public int MovieId { get; set; }
     public string MovieTitle { get; set; } = "";
-    public decimal Price { get; set; }
-
-    [Required, EmailAddress]
-    public string Email { get; set; } = "";
-
-    public DateTime PurchasedAt { get; set; } = DateTime.Now;
+    public decimal TotalPrice { get; set; }
+    public DateTime PurchaseDateTime { get; set; }
 }

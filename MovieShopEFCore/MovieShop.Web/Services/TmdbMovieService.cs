@@ -28,6 +28,15 @@ public class TmdbMovieService(HttpClient httpClient, IConfiguration configuratio
         return dto is null ? null : ToMovie(dto);
     }
 
+    public Task SaveReviewAsync(Review review, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("TMDB does not store MovieShop reviews.");
+
+    public Task<Purchase> PurchaseMovieAsync(int movieId, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("TMDB does not store MovieShop purchases.");
+
+    public Task AddFavoriteAsync(int movieId, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("TMDB does not store MovieShop favorites.");
+
     public async Task<PagedResult<Movie>> GetTop30HighestGrossingAsync(
         int pageNumber = 1,
         int pageSize = 10,
