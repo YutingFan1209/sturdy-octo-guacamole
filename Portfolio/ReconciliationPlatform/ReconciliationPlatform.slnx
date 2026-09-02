@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/ReconciliationPlatform.Benchmarks/ReconciliationPlatform.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ReconciliationPlatform.Core/ReconciliationPlatform.Core.csproj" />
+    <Project Path="src/ReconciliationPlatform.Infrastructure/ReconciliationPlatform.Infrastructure.csproj" />
+    <Project Path="src/ReconciliationPlatform.IngestionApi/ReconciliationPlatform.IngestionApi.csproj" />
+    <Project Path="src/ReconciliationPlatform.Notifications/ReconciliationPlatform.Notifications.csproj" />
+    <Project Path="src/ReconciliationPlatform.Reconciler/ReconciliationPlatform.Reconciler.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ReconciliationPlatform.Tests/ReconciliationPlatform.Tests.csproj" />
+  </Folder>
+</Solution>

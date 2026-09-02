@@ -1,0 +1,15 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment: { ACCEPT_EULA: "Y", MSSQL_SA_PASSWORD: "${RECON_SQL_PASSWORD:?Set RECON_SQL_PASSWORD}" }
+    ports: ["1437:1433"]
+  ingestion:
+    build: { context: ., dockerfile: src/ReconciliationPlatform.IngestionApi/Dockerfile }
+    environment: { ConnectionStrings__Reconciliation: "Server=sqlserver;Database=Reconciliation;User Id=sa;Password=${RECON_SQL_PASSWORD};TrustServerCertificate=True" }
+    ports: ["5085:8080"]
+  reconciler:
+    build: { context: ., dockerfile: src/ReconciliationPlatform.Reconciler/Dockerfile }
+    environment: { ConnectionStrings__Reconciliation: "Server=sqlserver;Database=Reconciliation;User Id=sa;Password=${RECON_SQL_PASSWORD};TrustServerCertificate=True" }
+  notifications:
+    build: { context: ., dockerfile: src/ReconciliationPlatform.Notifications/Dockerfile }
+    environment: { ConnectionStrings__Reconciliation: "Server=sqlserver;Database=Reconciliation;User Id=sa;Password=${RECON_SQL_PASSWORD};TrustServerCertificate=True", Notification__BaseUrl: "${NOTIFICATION_BASE_URL:?Set NOTIFICATION_BASE_URL}" }

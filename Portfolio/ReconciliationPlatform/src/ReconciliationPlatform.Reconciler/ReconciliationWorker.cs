@@ -1,0 +1,2 @@
+using ReconciliationPlatform.Core;
+namespace ReconciliationPlatform.Reconciler; public sealed class ReconciliationWorker(IServiceScopeFactory scopes) : BackgroundService { protected override async Task ExecuteAsync(CancellationToken ct) { while (!ct.IsCancellationRequested) { await using var scope = scopes.CreateAsyncScope(); var processed = await scope.ServiceProvider.GetRequiredService<ReconciliationService>().ProcessNextAsync(ct); if (!processed) await Task.Delay(500, ct); } } }

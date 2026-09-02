@@ -35,8 +35,8 @@ Each project has three qualitative bullets and exactly two quantified bullets. U
 - **Target:** measure reporting p50/p95 before/after optimization.
 
 ### Reconciliation Platform
-- Planned ingestion, matching, exception, and notification services.
-- Planned inbox/outbox boundaries and trace propagation.
-- Planned dead-letter visibility, retries, and idempotent exception creation.
+- Built separate ingestion, reconciliation, and notification processes.
+- Uses durable inbox/outbox boundaries, business-key uniqueness, and trace propagation.
+- Added exponential retries, operator-visible dead letters, and idempotent exception creation.
 - **Target:** measure record-processing throughput under documented concurrency.
-- **Target:** prove duplicate deliveries produce 0 duplicate side effects.
+- **Measured:** 2 duplicate deliveries produced 1 exception case and 0 duplicate side effects; 3 simulated notification failures produced 1 correlated dead letter.

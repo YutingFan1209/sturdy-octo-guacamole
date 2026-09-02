@@ -1,0 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using ReconciliationPlatform.Core;
+using ReconciliationPlatform.Infrastructure;
+var b = WebApplication.CreateBuilder(args); b.Services.AddControllers(); b.Services.AddProblemDetails(); b.Services.AddDbContext<ReconciliationDbContext>(o => o.UseSqlServer(b.Configuration.GetConnectionString("Reconciliation") ?? throw new InvalidOperationException("Connection string required."))); b.Services.AddScoped<IReconciliationStore, SqlReconciliationStore>(); b.Services.AddScoped<IngestionService>(); b.Services.AddSingleton(TimeProvider.System); b.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(); b.Services.AddAuthorizationBuilder().AddPolicy("Ingest", p => p.RequireRole("ReconciliationProducer")).AddPolicy("Operations", p => p.RequireRole("ReconciliationOperator")); b.Services.AddHealthChecks(); var app = b.Build(); app.UseExceptionHandler(); app.UseAuthentication(); app.UseAuthorization(); app.MapControllers(); app.MapHealthChecks("/health"); app.Run(); public partial class Program;
