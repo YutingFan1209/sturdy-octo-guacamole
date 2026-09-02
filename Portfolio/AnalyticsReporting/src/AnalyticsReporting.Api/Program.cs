@@ -1,0 +1,5 @@
+using AnalyticsReporting.Core;
+using AnalyticsReporting.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+var b = WebApplication.CreateBuilder(args); b.Services.AddControllers(); b.Services.AddProblemDetails(); b.Services.AddDbContext<AnalyticsDbContext>(o => o.UseSqlServer(b.Configuration.GetConnectionString("Analytics") ?? throw new InvalidOperationException("Connection string required."))); b.Services.AddScoped<IJobStore, SqlJobStore>(); b.Services.AddScoped<ImportService>(); b.Services.AddSingleton<IFileStore>(_ => new LocalFileStore(b.Configuration["Storage:Root"] ?? throw new InvalidOperationException("Storage root required."))); b.Services.AddSingleton(TimeProvider.System); b.Services.AddHealthChecks(); b.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(); b.Services.AddAuthorizationBuilder().AddPolicy("ReportingUser", p => p.RequireRole("ReportingUser")); var app = b.Build(); app.UseExceptionHandler(); app.UseAuthentication(); app.UseAuthorization(); app.MapControllers(); app.MapHealthChecks("/health"); app.Run(); public partial class Program;

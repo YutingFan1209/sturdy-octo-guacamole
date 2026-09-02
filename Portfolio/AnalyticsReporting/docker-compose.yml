@@ -1,0 +1,15 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment: { ACCEPT_EULA: "Y", MSSQL_SA_PASSWORD: "${ANALYTICS_SQL_PASSWORD:?Set ANALYTICS_SQL_PASSWORD}" }
+    ports: ["1436:1433"]
+  api:
+    build: { context: ., dockerfile: src/AnalyticsReporting.Api/Dockerfile }
+    environment: { ConnectionStrings__Analytics: "Server=sqlserver;Database=AnalyticsReporting;User Id=sa;Password=${ANALYTICS_SQL_PASSWORD};TrustServerCertificate=True", Storage__Root: "/data/uploads" }
+    volumes: ["analytics-files:/data/uploads"]
+    ports: ["5084:8080"]
+  worker:
+    build: { context: ., dockerfile: src/AnalyticsReporting.Worker/Dockerfile }
+    environment: { ConnectionStrings__Analytics: "Server=sqlserver;Database=AnalyticsReporting;User Id=sa;Password=${ANALYTICS_SQL_PASSWORD};TrustServerCertificate=True", Storage__Root: "/data/uploads" }
+    volumes: ["analytics-files:/data/uploads"]
+volumes: { analytics-files: {} }

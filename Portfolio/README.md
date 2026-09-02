@@ -28,10 +28,10 @@ Each project has three qualitative bullets and exactly two quantified bullets. U
 - **Measured:** 4 focused tests cover lifecycle, invalid transition, EF protections, and a 3-writer analyst/worker race; CI collects scoped coverage artifacts.
 
 ### Analytics & Reporting
-- Planned streaming upload, queued validation, resumable jobs, status, and reporting APIs.
-- Planned bounded-memory pipelines and idempotent checkpoints.
-- Planned safe restart after worker interruption.
-- **Target:** measure maximum file size and peak memory before/after streaming.
+- Built streaming upload, durable job status, resumable CSV processing, and category reporting.
+- Uses bounded sequential I/O, 500-row checkpoints, and idempotent job/line persistence.
+- Added bearer policy authorization and safe worker restart after interruption.
+- **Measured:** a 5 MiB automated upload completed with every requested read buffer at or below 64 KiB; peak-memory before/after remains a benchmark target.
 - **Target:** measure reporting p50/p95 before/after optimization.
 
 ### Reconciliation Platform

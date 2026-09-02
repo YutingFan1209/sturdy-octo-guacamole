@@ -1,0 +1,19 @@
+name: Analytics Reporting CI
+on:
+  pull_request: { paths: ['Portfolio/AnalyticsReporting/**', '.github/workflows/analytics-reporting-ci.yml'] }
+  push: { branches-ignore: [main], paths: ['Portfolio/AnalyticsReporting/**', '.github/workflows/analytics-reporting-ci.yml'] }
+permissions: { contents: read }
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '10.0.x', cache: true, cache-dependency-path: 'Portfolio/AnalyticsReporting/**/*.csproj' }
+      - run: dotnet restore Portfolio/AnalyticsReporting/AnalyticsReporting.slnx
+      - run: dotnet build Portfolio/AnalyticsReporting/AnalyticsReporting.slnx -c Release --no-restore
+      - run: dotnet test Portfolio/AnalyticsReporting/AnalyticsReporting.slnx -c Release --no-build --logger trx --results-directory artifacts/tests
+      - run: dotnet publish Portfolio/AnalyticsReporting/src/AnalyticsReporting.Api/AnalyticsReporting.Api.csproj -c Release --no-build -o artifacts/api
+      - run: dotnet publish Portfolio/AnalyticsReporting/src/AnalyticsReporting.Worker/AnalyticsReporting.Worker.csproj -c Release --no-build -o artifacts/worker
+      - uses: actions/upload-artifact@v4
+        with: { name: 'analytics-reporting-${{ github.sha }}', path: artifacts, retention-days: 14, if-no-files-found: error }

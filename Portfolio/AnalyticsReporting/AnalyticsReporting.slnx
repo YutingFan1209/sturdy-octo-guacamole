@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/AnalyticsReporting.Benchmarks/AnalyticsReporting.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/AnalyticsReporting.Api/AnalyticsReporting.Api.csproj" />
+    <Project Path="src/AnalyticsReporting.Core/AnalyticsReporting.Core.csproj" />
+    <Project Path="src/AnalyticsReporting.Infrastructure/AnalyticsReporting.Infrastructure.csproj" />
+    <Project Path="src/AnalyticsReporting.Worker/AnalyticsReporting.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AnalyticsReporting.Tests/AnalyticsReporting.Tests.csproj" />
+  </Folder>
+</Solution>
