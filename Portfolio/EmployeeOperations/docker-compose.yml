@@ -1,0 +1,17 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment: { ACCEPT_EULA: "Y", MSSQL_SA_PASSWORD: "${EMPLOYEE_OPS_SQL_PASSWORD:?Set EMPLOYEE_OPS_SQL_PASSWORD}" }
+    ports: ["1433:1433"]
+    volumes: ["employee-operations-sql:/var/opt/mssql"]
+    healthcheck: { test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1"], interval: 10s, timeout: 5s, retries: 10 }
+  api:
+    build: { context: ., dockerfile: src/EmployeeOperations.Api/Dockerfile }
+    environment:
+      ConnectionStrings__EmployeeOperations: "Server=sqlserver;Database=EmployeeOperations;User Id=sa;Password=${EMPLOYEE_OPS_SQL_PASSWORD};TrustServerCertificate=True"
+      Jwt__SigningKey: "${EMPLOYEE_OPS_JWT_SIGNING_KEY:?Set EMPLOYEE_OPS_JWT_SIGNING_KEY}"
+      Jwt__Issuer: EmployeeOperations
+      Jwt__Audience: EmployeeOperations.Client
+    ports: ["5080:8080"]
+    depends_on: { sqlserver: { condition: service_healthy } }
+volumes: { employee-operations-sql: {} }
