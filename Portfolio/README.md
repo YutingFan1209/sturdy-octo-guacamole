@@ -21,11 +21,11 @@ Each project has three qualitative bullets and exactly two quantified bullets. U
 - **Measured:** 32 simultaneous attempts produced 1 assignment, 31 explicit conflicts, and 0 undetected collisions in the automated contention test.
 
 ### Compliance Case Management
-- Planned modular-monolith investigation and escalation workflows.
-- Planned explicit transitions, policy authorization, and module-owned audit history.
-- Planned analyst/worker concurrency coordination.
+- Built a modular-monolith investigation API and scheduled escalation worker.
+- The Cases module owns explicit transitions and append-only audit history behind an EF concurrency token.
+- Added analyst policy authorization and conflict-safe analyst/worker coordination.
 - **Target:** measure deadline evaluation throughput and delay.
-- **Target:** report scoped domain/application test count and coverage.
+- **Measured:** 4 focused tests cover lifecycle, invalid transition, EF protections, and a 3-writer analyst/worker race; CI collects scoped coverage artifacts.
 
 ### Analytics & Reporting
 - Planned streaming upload, queued validation, resumable jobs, status, and reporting APIs.

@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/ComplianceCaseManagement.Benchmarks/ComplianceCaseManagement.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ComplianceCaseManagement.Api/ComplianceCaseManagement.Api.csproj" />
+    <Project Path="src/ComplianceCaseManagement.Cases/ComplianceCaseManagement.Cases.csproj" />
+    <Project Path="src/ComplianceCaseManagement.EscalationWorker/ComplianceCaseManagement.EscalationWorker.csproj" />
+    <Project Path="src/ComplianceCaseManagement.Infrastructure/ComplianceCaseManagement.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ComplianceCaseManagement.Tests/ComplianceCaseManagement.Tests.csproj" />
+  </Folder>
+</Solution>
