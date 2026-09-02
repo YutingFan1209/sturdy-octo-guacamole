@@ -4,6 +4,13 @@ namespace EmployeeOperations.Infrastructure;
 
 public sealed class EmployeeOperationsDbContextFactory : IDesignTimeDbContextFactory<EmployeeOperationsDbContext>
 {
-    public EmployeeOperationsDbContext CreateDbContext(string[] args) => new(new DbContextOptionsBuilder<EmployeeOperationsDbContext>()
-        .UseSqlServer("Server=localhost;Database=EmployeeOperations;Trusted_Connection=True;TrustServerCertificate=True").Options);
+    public EmployeeOperationsDbContext CreateDbContext(string[] args)
+    {
+        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__EmployeeOperations")
+            ?? throw new InvalidOperationException(
+                "Set ConnectionStrings__EmployeeOperations to a SQL Server connection string before running EF commands.");
+
+        return new EmployeeOperationsDbContext(
+            new DbContextOptionsBuilder<EmployeeOperationsDbContext>().UseSqlServer(connectionString).Options);
+    }
 }

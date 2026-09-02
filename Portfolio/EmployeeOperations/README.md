@@ -18,6 +18,7 @@ An internal equipment-request workflow demonstrating controlled transitions rath
 ```bash
 export EMPLOYEE_OPS_SQL_PASSWORD='strong-local-password'
 export EMPLOYEE_OPS_JWT_SIGNING_KEY='at-least-32-local-development-characters'
+export ConnectionStrings__EmployeeOperations="Server=localhost,1433;Database=EmployeeOperations;User Id=sa;Password=${EMPLOYEE_OPS_SQL_PASSWORD};Encrypt=False;TrustServerCertificate=True"
 docker compose up -d sqlserver
 dotnet user-secrets set --project src/EmployeeOperations.Api 'ConnectionStrings:EmployeeOperations' 'Server=localhost,1433;Database=EmployeeOperations;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True'
 dotnet user-secrets set --project src/EmployeeOperations.Api 'Jwt:SigningKey' 'YOUR_SIGNING_KEY'
