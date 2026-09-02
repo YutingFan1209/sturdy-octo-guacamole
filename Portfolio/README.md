@@ -14,11 +14,11 @@ Each project has three qualitative bullets and exactly two quantified bullets. U
 - **Measured:** tests cover all 6 allowed lifecycle edges and 19 forbidden edges, plus HTTP authorization and stale-version failure.
 
 ### Asset & Access Manager
-- Planned MVC/Razor asset, license, assignment, return, and approval workflows.
-- Planned database-enforced exclusivity for active laptop assignments.
-- Planned clear conflict responses for simultaneous administrators.
+- Built the MVC/Razor asset-search and laptop-assignment vertical slice.
+- Uses conditional SQL reservation plus a filtered unique index for active assignments.
+- Added administrator policy protection, transactional persistence, and clear collision feedback.
 - **Target:** measure search latency across at least 25,000 seeded assets.
-- **Target:** prove 0 undetected collisions in a documented concurrency run.
+- **Measured:** 32 simultaneous attempts produced 1 assignment, 31 explicit conflicts, and 0 undetected collisions in the automated contention test.
 
 ### Compliance Case Management
 - Planned modular-monolith investigation and escalation workflows.
