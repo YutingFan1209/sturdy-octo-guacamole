@@ -1,7 +1,0 @@
-h1 { font-size: clamp(2.2rem, 6vw, 4.5rem); margin: .35rem 0 2rem; }
-.purchase-list { display: grid; gap: .75rem; }
-.purchase-list a { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.2rem; border: 1px solid #292d38; border-radius: 12px; background: #171a22; color: white; text-decoration: none; }
-.purchase-list a:hover { border-color: #ffca3a; }
-.purchase-list div { display: grid; gap: .3rem; }
-.purchase-list span { color: #aeb3c2; font-size: .9rem; }
-.purchase-list b { color: #ffca3a; }
