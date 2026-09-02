@@ -5,7 +5,7 @@ services:
     ports: ["1436:1433"]
   api:
     build: { context: ., dockerfile: src/AnalyticsReporting.Api/Dockerfile }
-    environment: { ConnectionStrings__Analytics: "Server=sqlserver;Database=AnalyticsReporting;User Id=sa;Password=${ANALYTICS_SQL_PASSWORD};TrustServerCertificate=True", Storage__Root: "/data/uploads" }
+    environment: { ConnectionStrings__Analytics: "Server=sqlserver;Database=AnalyticsReporting;User Id=sa;Password=${ANALYTICS_SQL_PASSWORD};TrustServerCertificate=True", Storage__Root: "/data/uploads", Jwt__SigningKey: "${ANALYTICS_JWT_KEY:?Set ANALYTICS_JWT_KEY}" }
     volumes: ["analytics-files:/data/uploads"]
     ports: ["5084:8080"]
   worker:

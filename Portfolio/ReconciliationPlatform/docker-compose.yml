@@ -5,7 +5,7 @@ services:
     ports: ["1437:1433"]
   ingestion:
     build: { context: ., dockerfile: src/ReconciliationPlatform.IngestionApi/Dockerfile }
-    environment: { ConnectionStrings__Reconciliation: "Server=sqlserver;Database=Reconciliation;User Id=sa;Password=${RECON_SQL_PASSWORD};TrustServerCertificate=True" }
+    environment: { ConnectionStrings__Reconciliation: "Server=sqlserver;Database=Reconciliation;User Id=sa;Password=${RECON_SQL_PASSWORD};TrustServerCertificate=True", Jwt__SigningKey: "${RECON_JWT_KEY:?Set RECON_JWT_KEY}" }
     ports: ["5085:8080"]
   reconciler:
     build: { context: ., dockerfile: src/ReconciliationPlatform.Reconciler/Dockerfile }
