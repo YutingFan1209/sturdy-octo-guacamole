@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/AssetAccessManager.Benchmarks/AssetAccessManager.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/AssetAccessManager.Application/AssetAccessManager.Application.csproj" />
+    <Project Path="src/AssetAccessManager.Domain/AssetAccessManager.Domain.csproj" />
+    <Project Path="src/AssetAccessManager.Infrastructure/AssetAccessManager.Infrastructure.csproj" />
+    <Project Path="src/AssetAccessManager.Web/AssetAccessManager.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AssetAccessManager.Domain.Tests/AssetAccessManager.Domain.Tests.csproj" />
+    <Project Path="tests/AssetAccessManager.IntegrationTests/AssetAccessManager.IntegrationTests.csproj" />
+  </Folder>
+</Solution>

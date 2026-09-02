@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/EmployeeOperations.Benchmarks/EmployeeOperations.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/EmployeeOperations.Api/EmployeeOperations.Api.csproj" />
+    <Project Path="src/EmployeeOperations.Application/EmployeeOperations.Application.csproj" />
+    <Project Path="src/EmployeeOperations.Domain/EmployeeOperations.Domain.csproj" />
+    <Project Path="src/EmployeeOperations.Infrastructure/EmployeeOperations.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EmployeeOperations.Api.IntegrationTests/EmployeeOperations.Api.IntegrationTests.csproj" />
+    <Project Path="tests/EmployeeOperations.Domain.Tests/EmployeeOperations.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

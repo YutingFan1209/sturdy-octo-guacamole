@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-ComplianceCaseManagement.EscalationWorker-a30127a0-c7c4-4af0-8edc-6ca2ab9bdfd7</UserSecretsId>
+</PropertyGroup>
+  <ItemGroup><ProjectReference Include="..\ComplianceCaseManagement.Cases\ComplianceCaseManagement.Cases.csproj"/><ProjectReference Include="..\ComplianceCaseManagement.Infrastructure\ComplianceCaseManagement.Infrastructure.csproj"/><PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10"/></ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
+  </ItemGroup>
+</Project>

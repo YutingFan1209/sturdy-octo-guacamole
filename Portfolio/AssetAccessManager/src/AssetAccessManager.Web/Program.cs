@@ -1,0 +1,7 @@
+using AssetAccessManager.Application;
+using AssetAccessManager.Infrastructure;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+var builder = WebApplication.CreateBuilder(args); builder.Services.AddControllersWithViews(); builder.Services.AddProblemDetails(); builder.Services.AddDbContext<AssetAccessDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("AssetAccess") ?? throw new InvalidOperationException("ConnectionStrings:AssetAccess is required."))); builder.Services.AddScoped<IAssetStore, SqlAssetStore>(); builder.Services.AddScoped<AssetService>(); builder.Services.AddSingleton(TimeProvider.System); builder.Services.AddHealthChecks().AddDbContextCheck<AssetAccessDbContext>(); builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(o => { o.LoginPath = "/development-auth/sign-in"; o.AccessDeniedPath = "/Home/AccessDenied"; }); builder.Services.AddAuthorizationBuilder().AddPolicy("AssetAdministrator", p => p.RequireRole("AssetAdministrator"));
+var app = builder.Build(); if (!app.Environment.IsDevelopment()) { app.UseExceptionHandler("/Home/Error"); app.UseHsts(); }
+app.UseHttpsRedirection(); app.UseRouting(); app.UseAuthentication(); app.UseAuthorization(); app.MapHealthChecks("/health"); app.MapControllerRoute(name: "default", pattern: "{controller=Assets}/{action=Index}/{id?}"); app.Run(); public partial class Program;

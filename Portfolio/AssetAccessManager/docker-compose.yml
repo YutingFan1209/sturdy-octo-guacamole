@@ -1,0 +1,14 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment: { ACCEPT_EULA: "Y", MSSQL_SA_PASSWORD: "${ASSET_ACCESS_SQL_PASSWORD:?Set ASSET_ACCESS_SQL_PASSWORD}" }
+    ports: ["1434:1433"]
+    volumes: ["asset-access-sql:/var/opt/mssql"]
+  web:
+    build: { context: ., dockerfile: src/AssetAccessManager.Web/Dockerfile }
+    environment:
+      ConnectionStrings__AssetAccess: "Server=sqlserver;Database=AssetAccessManager;User Id=sa;Password=${ASSET_ACCESS_SQL_PASSWORD};TrustServerCertificate=True"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports: ["5082:8080"]
+    depends_on: [sqlserver]
+volumes: { asset-access-sql: {} }
